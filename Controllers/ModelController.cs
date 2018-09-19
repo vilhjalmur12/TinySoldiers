@@ -8,7 +8,7 @@ namespace TinySoldiers.Controllers
     public class ModelController : Controller 
     {
         [HttpGet("")]
-        public IActionResult GetAllModels() {
+        public IActionResult GetAllModels([FromQuery]int pageN = 1, [FromQuery]int pageS = 10) {
             return Ok("This is GetAllModels function");
         }
 
