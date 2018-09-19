@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 
-namespace template.Extensions
+namespace TinySoldiers.Extensions
 {
     public static class HyperMediaExtensions 
     {
