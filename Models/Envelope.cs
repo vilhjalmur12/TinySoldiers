@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace template.Models
+namespace TinySoldiers.Models
 {
     public class Envelope<T> where T : class
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using Newtonsoft.Json;
 
-namespace template.Models
+namespace TinySoldiers.Models
 {
     public class HyperMediaModel
     {

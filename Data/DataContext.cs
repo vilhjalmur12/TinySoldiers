@@ -1,8 +1,8 @@
-using template.Models;
+using TinySoldiers.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace template.Data
+namespace TinySoldiers.Data
 {
     public static class DataContext
     {
