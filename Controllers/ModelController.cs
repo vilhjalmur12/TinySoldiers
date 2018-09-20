@@ -16,15 +16,22 @@ namespace TinySoldiers.Controllers
         [HttpGet("")]
         public IActionResult GetAllModels([FromQuery]int pageNumber = 1, [FromQuery]int pageSize = 10) {
 
-            var listItems = DataContext.Models.ToLightWeight()
+            var fullList = DataContext.Models.ToLightWeight();
+            
+            var listItems = fullList
                 .OrderBy(c => c.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            LinkBuilder(ref listItems);
+            foreach(ModelDTO item in listItems)
+            {
+                item.Links.AddReference("self", "http://localhost:5000/model/");
+            }
             
-            return Ok(new Envelope<ModelDTO>(listItems, pageSize, pageNumber, listItems.Count()));
+            int maxPages = (int) Math.Ceiling(fullList.Count() / (decimal) pageSize);
+
+            return Ok(new Envelope<ModelDTO>(listItems, pageSize, pageNumber, maxPages));
         }
 
         [HttpGet("model/{modelId}")]
@@ -44,22 +51,9 @@ namespace TinySoldiers.Controllers
                 return NotFound("Id not found");
             }
 
-            // TODO: þurfum að geta skipta í fleiri objects fyrir links
-            model.Links.AddReference("ref", "self");
-            model.Links.AddReference("method", "GET");
-            model.Links.AddReference("href", "http://localhost:5000/model/" + modelId);
+            model.Links.AddReference("self", "http://localhost:5000/model/");
             
             return Ok(model);
-        }
-
-        private void LinkBuilder(ref List<ModelDTO> modelList) {
-            
-            foreach(ModelDTO item in modelList)
-            {
-                item.Links.AddReference("ref", "self");
-                item.Links.AddReference("method", "GET");
-                item.Links.AddReference("href", "http://localhost:5000/model/" + item.Id);
-            }
         }
     }
     
