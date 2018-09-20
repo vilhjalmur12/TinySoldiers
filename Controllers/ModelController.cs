@@ -15,17 +15,17 @@ namespace TinySoldiers.Controllers
     {
 
         [HttpGet("")]
-        public IActionResult GetAllModels([FromQuery]int pageN = 1, [FromQuery]int pageS = 10) {
+        public IActionResult GetAllModels([FromQuery]int pageNumber = 1, [FromQuery]int pageSize = 10) {
 
             var listItems = DataContext.Models.ToLightWeight()
                 .OrderBy(c => c.Id)
-                .Skip((pageN - 1) * pageS)
-                .Take(pageS)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             LinkBuilder(ref listItems);
             
-            return Ok(new Envelope<ModelDTO>(listItems, pageS, pageN, listItems.Count()));
+            return Ok(new Envelope<ModelDTO>(listItems, pageSize, pageNumber, listItems.Count()));
         }
 
         [HttpGet("model/{modelId}")]
