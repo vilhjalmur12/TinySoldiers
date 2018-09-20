@@ -16,12 +16,18 @@ namespace TinySoldiers.Controllers
 
             List<ModelDTO> tmp = ListExtensions.ToLightWeight(DataContext.Models);
 
-            return Ok(tmp);
+            var listItems = ListExtensions.ToLightWeight(DataContext.Models)
+                .OrderBy(c => c.Id)
+                .Skip(pageN)
+                .Take(pageS)
+                .ToList();
+
+            return Ok(new Envelope<ModelDTO>(listItems, pageS, pageN, 100));
         }
 
         [HttpGet("model/{modelId}")]
         public IActionResult GetModelById(int modelId) {
-            return Ok("This is model by id function");
+            return Ok("This is model by id function ");
         }
     }
     
