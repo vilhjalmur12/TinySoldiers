@@ -31,7 +31,9 @@ namespace TinySoldiers.Controllers
 
             ModelDetailsDTO model = _db.FirstOrDefault(m => m.Id == modelId);
             
-            // TODO: ef ekkert finnst þá returna 404
+            if(model == null) {
+                return NotFound("Id not found");
+            }
 
             // TODO: þurfum að geta skipta í fleiri objects fyrir links
             model.Links.AddReference("ref", "self");
