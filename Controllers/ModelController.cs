@@ -8,7 +8,6 @@ using Microsoft.Extensions.Primitives;
 
 using System;
 
-
 namespace TinySoldiers.Controllers 
 {
     public class ModelController : Controller 
