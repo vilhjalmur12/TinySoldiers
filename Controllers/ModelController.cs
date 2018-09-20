@@ -4,6 +4,9 @@ using System.Linq;
 using TinySoldiers.Data;
 using TinySoldiers.Models;
 using TinySoldiers.Extensions;
+using Microsoft.Extensions.Primitives;
+
+using System;
 
 
 namespace TinySoldiers.Controllers 
@@ -27,7 +30,14 @@ namespace TinySoldiers.Controllers
 
         [HttpGet("model/{modelId}")]
         public IActionResult GetModelById(int modelId) {
-            var _db = DataContext.Models.ToDetails();
+            List<ModelDetailsDTO> _db;
+
+            if(Request.Headers.TryGetValue("Accept-Language", out StringValues value))
+            {
+                _db = DataContext.Models.ToDetails(value.ToString());
+            } else {
+                _db = DataContext.Models.ToDetails();
+            }
 
             ModelDetailsDTO model = _db.FirstOrDefault(m => m.Id == modelId);
             
