@@ -26,7 +26,7 @@ namespace TinySoldiers.Controllers
 
             foreach(ModelDTO item in listItems)
             {
-                item.Links.AddReference("self", "http://localhost:5000/model/");
+                item.Links.AddReference("self", "http://localhost:5000/model/" + item.Id);
             }
             
             int maxPages = (int) Math.Ceiling(fullList.Count() / (decimal) pageSize);
@@ -51,7 +51,7 @@ namespace TinySoldiers.Controllers
                 return NotFound("Id not found");
             }
 
-            model.Links.AddReference("self", "http://localhost:5000/model/");
+            model.Links.AddReference("self", "http://localhost:5000/model/" + model.Id);
             
             return Ok(model);
         }
