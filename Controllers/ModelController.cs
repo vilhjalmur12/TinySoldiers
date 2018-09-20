@@ -14,11 +14,7 @@ namespace TinySoldiers.Controllers
         [HttpGet("")]
         public IActionResult GetAllModels([FromQuery]int pageN = 1, [FromQuery]int pageS = 10) {
 
-            List<ModelDTO> tmp = ListExtensions.ToLightWeight(DataContext.Models);
-
-            var tmp2 = DataContext.Models.ToDetails();
-
-            var listItems = ListExtensions.ToLightWeight(DataContext.Models)
+            var listItems = DataContext.Models.ToLightWeight()
                 .OrderBy(c => c.Id)
                 .Skip((pageN - 1) * pageS)
                 .Take(pageS)
@@ -26,15 +22,22 @@ namespace TinySoldiers.Controllers
 
             LinkBuilder(ref listItems);
             
-            return Ok(new Envelope<ModelDTO>(listItems, pageS, pageN, tmp.Count()));
+            return Ok(new Envelope<ModelDTO>(listItems, pageS, pageN, listItems.Count()));
         }
 
         [HttpGet("model/{modelId}")]
         public IActionResult GetModelById(int modelId) {
-            var _db = ListExtensions.ToLightWeight(DataContext.Models);
+            var _db = DataContext.Models.ToDetails();
 
-            ModelDTO model = _db.FirstOrDefault(m => m.Id == modelId);
+            ModelDetailsDTO model = _db.FirstOrDefault(m => m.Id == modelId);
+            
+            // TODO: ef ekkert finnst þá returna 404
 
+            // TODO: þurfum að geta skipta í fleiri objects fyrir links
+            model.Links.AddReference("ref", "self");
+            model.Links.AddReference("method", "GET");
+            model.Links.AddReference("href", "http://localhost:5000/model/" + modelId);
+            
             return Ok(model);
         }
 
@@ -42,9 +45,9 @@ namespace TinySoldiers.Controllers
             
             foreach(ModelDTO item in modelList)
             {
-                item.Links.TryAdd("method", "GET");
-                var getUri = "http://localhost:5000/model/" + item.Id;
-                item.Links.TryAdd("uri", getUri);
+                item.Links.AddReference("ref", "self");
+                item.Links.AddReference("method", "GET");
+                item.Links.AddReference("href", "http://localhost:5000/model/" + item.Id);
             }
         }
     }
